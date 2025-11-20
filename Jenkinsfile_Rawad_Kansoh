@@ -59,16 +59,17 @@ pipeline {
             }
         }
 
-        stage('Security Scan') {
-            steps {
-                script {
-                    sh """
-                        . ${VIRTUAL_ENV}/bin/activate
-                        bandit -r .
-                    """
-                }
-            }
-        }
+	stage('Security Scan') {
+	    steps {
+		script {
+		    sh """
+		        . ${VIRTUAL_ENV}/bin/activate
+		        bandit -r . -x venv
+		    """
+		}
+	    }
+	}
+
 
         stage('Deploy') {
             steps {
