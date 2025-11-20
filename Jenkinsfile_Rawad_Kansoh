@@ -64,13 +64,11 @@ pipeline {
 		script {
 		    sh """
 		        . ${VIRTUAL_ENV}/bin/activate
-		        bandit app.py -r tests
+		        bandit -r app.py tests
 		    """
 		}
 	    }
 	}
-
-
 
         stage('Deploy') {
             steps {
