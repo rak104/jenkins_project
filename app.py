@@ -1,5 +1,6 @@
+name = "Rawad Kansoh"
 def greet(name):
-	return f"Hello, Rawad Kansoh!"
+    return f"Hello, {name}!"
 
 if name == " main ":
     print(greet("World"))
