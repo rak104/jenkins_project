@@ -17,6 +17,7 @@ pipeline {
                     // Activate venv and install dependencies
                     sh """
                         . ${VIRTUAL_ENV}/bin/activate
+                        pip install --upgrade pip
                         pip install -r requirements.txt
                     """
                 }
@@ -45,12 +46,42 @@ pipeline {
             }
         }
 
+        stage('Coverage') {
+            steps {
+                script {
+                    sh """
+                        . ${VIRTUAL_ENV}/bin/activate
+                        coverage erase
+                        coverage run -m pytest
+                        coverage report -m
+                    """
+                }
+            }
+        }
+
+        stage('Security Scan') {
+            steps {
+                script {
+                    sh """
+                        . ${VIRTUAL_ENV}/bin/activate
+                        bandit -r .
+                    """
+                }
+            }
+        }
+
         stage('Deploy') {
             steps {
                 script {
-                    echo "Deploying application..."
-                    // Add your deployment commands here, e.g.:
-                    // sh ". ${VIRTUAL_ENV}/bin/activate && ./deploy.sh"
+                    // Simple local "deployment" example:
+                    // copy the app into a deploy directory and run it
+                    sh """
+                        . ${VIRTUAL_ENV}/bin/activate
+                        mkdir -p deploy
+                        cp app.py deploy/
+                        echo "Starting application from deploy/app.py"
+                        python deploy/app.py
+                    """
                 }
             }
         }
